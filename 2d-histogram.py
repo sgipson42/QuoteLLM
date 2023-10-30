@@ -46,6 +46,7 @@ for pair in file_data:
 # plt.hist2d(sorted['levenshtein_distance'], sorted['mean'], bins=(10, mean_bin_count), cmap = 'BuPu')
 hist, xedges, yedges = np.histogram2d(df_sorted['levenshtein_distance'], df_sorted['ranked_mean'],  bins=(mean_ranking, 10))
 # numbers bin divided by total number of reps for that category
+print(xedges)
 
 # Access and print the number of items in each bin
 for i in range(len(xedges) - 1):
@@ -63,8 +64,8 @@ for i in range(len(xedges) - 1):
         print(f"Bin ({i}, {j}): Percentage = {percentage:.2f}%")
 
 # Plotting data:
-plt.figure(figsize=(20, 6))
-plt.imshow(hist_normalized, origin='lower', cmap='BuPu', extent=[xedges[0], len(xedges), yedges[0], yedges[-1]])
+plt.figure(figsize=(10, 6))
+plt.imshow(hist_normalized, origin='lower', cmap='BuPu', extent=[xedges[0], 10, yedges[0], mean_ranking])
 plt.colorbar(label='Frequency')
 plt.title('Distribution of Levenshtein Distances per Category') # Density heatmap
 plt.xlabel('Levenshtein Distance')
