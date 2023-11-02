@@ -25,12 +25,13 @@ mean_ranking = 0
 # sort the means (ascending)
 file_data = sorted(file_data, key=lambda tup: tup[0])
 print(file_data)
-
 # loop through files now sorted by mean
 for pair in file_data:
     # reopen the file from filename
     df = pd.read_csv(filepath + pair[1])
     distances = df['levenshtein_distance']
+    distances = distances /len(df['levenshtein_distance'])
+    print(len(df['levenshtein_distance']))
     print(mean_ranking)
     print(pair[0])
     # loop through distance column
@@ -43,21 +44,35 @@ for pair in file_data:
     mean_ranking += 1
 
 # Normalizing data:
+# each bin value is the percentage of items in the category that are in that bin
+# ex. in this bin, there are x items/ # items in the category (the file, also the row)
+# bin them all, then label each record as being in a bin (count items per bin)
+# then per file(row), get the percent per bin (# items in bin/ # items in the file(row))
 # plt.hist2d(sorted['levenshtein_distance'], sorted['mean'], bins=(10, mean_bin_count), cmap = 'BuPu')
 hist, xedges, yedges = np.histogram2d(df_sorted['levenshtein_distance'], df_sorted['ranked_mean'],  bins=(mean_ranking, 10))
 # numbers bin divided by total number of reps for that category
-print(xedges)
+# is it still not binning right?? maybe duplicates?
 
-# Access and print the number of items in each bin
+# Count the number of items in each bin
+for i in range(hist.shape[0]):
+    for j in range(hist.shape[1]):
+        count = hist[i, j]
+        print(f'Bin ({i}, {j}): {count} items')
+"""
+# Access, print, count items per bin
 for i in range(len(xedges) - 1):
     for j in range(len(yedges) - 1):
         count = hist[i, j]
         print(f"Bin ({i}, {j}): Count = {count}")
+"""
+# this should be what is used for normalization? hist.sum should work but counts should be different than they are
+print(df_sorted['ranked_mean'].value_counts().tolist())
 
-# Normalize the histogram by row
+# Normalize the histogram by row (# of items in the file/category)
+print(hist.sum(axis=1, keepdims=True))
 hist_normalized = hist / hist.sum(axis=1, keepdims=True)
-
-# Print or use the normalized histogram
+# hist_normalized = hist / df_sorted['ranked_mean'].value_counts().tolist()
+# Convert hist_normalized to percentages
 for i in range(len(xedges) - 1):
     for j in range(len(yedges) - 1):
         percentage = hist_normalized[i, j] * 100  # Convert to percentage
@@ -85,14 +100,5 @@ plt.yticks(y_bins.tolist(), cut_names)
 # save and show results
 plt.savefig('/Users/skyler/Desktop/AI_Research/Results/categories-2d-histogram.png')
 plt.show()
-# each row should be what percent of items in each category are in that bin category (that range)
-# ratio of things that are in each bin
-# so bin them all, then label each record as being in each one of the bins
-# then per file, get the percent per bin
-# hist2d takes weights
 
-# get rest of files
-# fix title & axis/colorbar labels to reflect the story
 
-# wikipedia content top 100 most viewed pages
-# other religious texts
