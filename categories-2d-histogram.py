@@ -30,7 +30,8 @@ for pair in file_data:
     # reopen the file from filename
     df = pd.read_csv(filepath + pair[1])
     distances = df['levenshtein_distance']
-    distances = distances /len(df['levenshtein_distance'])
+    print(distances)
+    # distances = distances /len(df['levenshtein_distance'])
     print(len(df['levenshtein_distance']))
     print(mean_ranking)
     print(pair[0])
@@ -43,33 +44,27 @@ for pair in file_data:
         df_sorted.loc[len(df_sorted)] = new_row
     mean_ranking += 1
 
+print(mean_ranking)
 # Normalizing data:
 # each bin value is the percentage of items in the category that are in that bin
 # ex. in this bin, there are x items/ # items in the category (the file, also the row)
 # bin them all, then label each record as being in a bin (count items per bin)
 # then per file(row), get the percent per bin (# items in bin/ # items in the file(row))
-# plt.hist2d(sorted['levenshtein_distance'], sorted['mean'], bins=(10, mean_bin_count), cmap = 'BuPu')
-hist, xedges, yedges = np.histogram2d(df_sorted['levenshtein_distance'], df_sorted['ranked_mean'],  bins=(mean_ranking, 10))
+# plt.hist2d(df_sorted['levenshtein_distance'], df_sorted['ranked_mean'], bins=(10, mean_ranking), cmap = 'BuPu')
+hist, xedges, yedges = np.histogram2d(df_sorted['ranked_mean'], df_sorted['levenshtein_distance'],  bins=[mean_ranking, 10])
 # numbers bin divided by total number of reps for that category
-# is it still not binning right?? maybe duplicates?
 
-# Count the number of items in each bin
-for i in range(hist.shape[0]):
-    for j in range(hist.shape[1]):
-        count = hist[i, j]
-        print(f'Bin ({i}, {j}): {count} items')
-"""
 # Access, print, count items per bin
 for i in range(len(xedges) - 1):
     for j in range(len(yedges) - 1):
         count = hist[i, j]
         print(f"Bin ({i}, {j}): Count = {count}")
-"""
-# this should be what is used for normalization? hist.sum should work but counts should be different than they are
-print(df_sorted['ranked_mean'].value_counts().tolist())
 
+print(df_sorted['ranked_mean'].value_counts()) # the sum of each row
 # Normalize the histogram by row (# of items in the file/category)
-print(hist.sum(axis=1, keepdims=True))
+
+print(hist) # the sum of each row (matches ranked_mean value counts as above)
+print(hist.sum(axis=1, keepdims=True)) # this is correct
 hist_normalized = hist / hist.sum(axis=1, keepdims=True)
 # hist_normalized = hist / df_sorted['ranked_mean'].value_counts().tolist()
 # Convert hist_normalized to percentages
@@ -84,7 +79,7 @@ plt.imshow(hist_normalized, origin='lower', cmap='BuPu', extent=[xedges[0], 10, 
 plt.colorbar(label='Frequency')
 plt.title('Distribution of Levenshtein Distances per Category') # Density heatmap
 plt.xlabel('Levenshtein Distance')
-plt.ylabel('Mean Distance per Category')
+plt.ylabel('Category (Ranked by Mean Levenshtein Distance)')
 x_bins = np.arange(0, 10) # 0-9
 y_bins = np.arange(0, mean_ranking) # 0-8
 plt.xticks(x_bins.tolist(), [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])

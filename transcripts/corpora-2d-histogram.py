@@ -46,7 +46,7 @@ for file in glob.glob(filepath + '*'):
         df_distances = pd.concat([df_distances, df_title])
 
 print(df_distances)
-print(df_ranked_means)
+print(df_ranked_means) # the number of titles
 # merge exact distances and titles with ranked mean distances and titles
 df = pd.merge(df_ranked_means, df_distances, on="title")
 print(df)
@@ -60,10 +60,9 @@ print(df)
 # bin them all, then label each record as being in a bin (count items per bin)
 # then per title (row), get the percent per bin (# items in bin/ # items with the title (row))
 # plt.hist2d(sorted['levenshtein_distance'], sorted['mean'], bins=(10, mean_bin_count), cmap = 'BuPu')
-hist, xedges, yedges = np.histogram2d(df['levenshtein_distance'], df['ranked_mean'],  bins=(len(df), 10))
+hist, xedges, yedges = np.histogram2d(df['ranked_mean'], df['levenshtein_distance'], bins=(len(df_ranked_means), 10))
 # numbers bin divided by total number of reps for that title
 
-# this should be what is used for normalization?
 print(df['ranked_mean'].value_counts().tolist()) # of items under a title (all have the same ranked_mean value)
 
 # Access, print, count items per bin
@@ -73,36 +72,48 @@ for i in range(len(xedges) - 1):
         print(f"Bin ({i}, {j}): Count = {count}")
 
 # Normalize the histogram by row (# of items in the file/category)
-    # the df['count'] column
-print(hist.sum(axis=1, keepdims=True))
+print(hist.sum(axis=1, keepdims=True)) # matches rank_mean value counts (checking that binning is correct)
 hist_normalized = hist / hist.sum(axis=1, keepdims=True)
 
 # Convert hist_normalized to percentages
 for i in range(len(xedges) - 1):
     for j in range(len(yedges) - 1):
         percentage = hist_normalized[i, j] * 100  # Convert to percentage
-        print(f"Bin ({i}, {j}): Percentage = {percentage:.2f}%")
+        # print(f"Bin ({i}, {j}): Percentage = {percentage:.2f}%")
 
 # Plotting data:
 plt.figure(figsize=(20, 8))
-plt.imshow(hist_normalized, origin='lower', cmap='BuPu', extent=[xedges[0], 10, yedges[0], len(df)])
+plt.imshow(hist_normalized, origin='lower', cmap='BuPu', extent=[xedges[0], 10, yedges[0], len(df_ranked_means)])
 plt.colorbar(label='Frequency')
 plt.title('Distribution of Levenshtein Distances per Title') # Density heatmap
 plt.xlabel('Levenshtein Distance')
-plt.ylabel('Mean Distance per Category')
+plt.ylabel('Title (Ranked by Mean Levenshtein Distance)')
 x_bins = np.arange(0, 10) # 0-9
-y_bins = np.arange(0, len(df)) # 0-8
+y_bins = np.arange(0, len(df_ranked_means)) #
 plt.xticks(x_bins.tolist(), [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9])
 # make y-ticks show title/filename:
 cut_names = []
-for name in df['csv']:
-    # Split the filename and get first part
-    cut_name = name.split('-results.csv')[0]
+# multiple shakespeare files = multiple of same title
+# full titles not printed
+# some text in titles -- could change title manually or write code to delete after certain point
+# scale of graph
+for title in df_ranked_means['title']:
+    # Split the title by the number of words
+    pieces = title.split()
+    if len(pieces) < 4:
+        cut_name = title
+    else:
+        cut_name = ""
+        for i in range(0, 4):
+            cut_name+=" ".join(pieces[i:i+1]) + " "
+        #cut_name = (" ".join(pieces[i:i+3]) for i in range(0, len(pieces), 4))
+        print(cut_name)
     cut_names.append(cut_name)
+print(cut_names)
 plt.yticks(y_bins.tolist(), cut_names)
 # save and show results
 plt.savefig('/Users/skyler/Desktop/AI_Research/Results/corpora-2d-histogram.png')
-# plt.show()
+plt.show()
 print(len(xedges))
 print(len(yedges))
 
