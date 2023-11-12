@@ -2,6 +2,10 @@
 # https://huggingface.co/intfloat/e5-small-v2
 # pip install sentence_transformers~=2.2.2
 
+# loops to pass in prediction and answer--increase length of the string passed in on each --max length of one will be
+# reached faster than the other so make sure it does max length after one gets longer
+# how to compare embeddings?
+# turn embeddings into a score
 """
 from sentence_transformers import SentenceTransformer
 model = SentenceTransformer('intfloat/e5-small-v2')
