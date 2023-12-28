@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-filepath = '/Users/skyler/Desktop/AI_Research/Results/CSVs/'
+filepath = '/Users/skyler/Desktop/AI_Research/Results_2.0/CSVs/bible-Versions-results.csv'
 df_means = pd.DataFrame(columns=['title', 'mean_levenshtein'])
 # all distances under a title need to have the same mean (to rank the means of all titles)
 # loop through all files, putting each title and its respective mean levenshtein distance in a dataframe
@@ -112,7 +112,7 @@ for title in df_ranked_means['title']:
 print(cut_names)
 plt.yticks(y_bins.tolist(), cut_names)
 # save and show results
-plt.savefig('/Users/skyler/Desktop/AI_Research/Results/corpora-2d-histogram.png')
+plt.savefig('/Users/skyler/Desktop/AI_Research/Results_2.0/bible-versions-2d-histogram.png')
 plt.show()
 print(len(xedges))
 print(len(yedges))
