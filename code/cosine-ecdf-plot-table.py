@@ -114,7 +114,7 @@ table.set_fontsize(10)
 table.scale(1.5, 1.5)  # Adjust the scale of the table if needed
 plt.axis('off')
 plt.title('Table of Areas under Empirical CDF Curves')
-plt.savefig('/Users/skyler/Desktop/QuoteLLM/cosine-ecdf-table.png')
+plt.savefig('/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/cosine_ecdfs/cosine-ecdf-table.png')
 plt.show()
 
 """

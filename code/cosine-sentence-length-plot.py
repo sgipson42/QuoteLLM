@@ -57,6 +57,6 @@ plt.plot(x, y, marker = "o")  # Plot the chart
 # plt.plot(max_index, max_val, color='red', label='Max Value')
 # plt.annotate(f'Max Value: {max_val}', (max_index, max_val), xytext=(max_index + 0.5, max_val + 0.5),
              #arrowprops=dict(facecolor='black', arrowstyle='->'), fontsize=10)
-plt.savefig(f"/Users/skyler/Desktop/QuoteLLM/{genre}_cosine_scores_{row_num}.png")
+plt.savefig(f"/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/cosine_sentence_length_plots/{genre}_cosine_scores_{row_num}.png")
 # 8 is index in dataframe not index in excel -- index in excel is 10
 plt.show()  # display

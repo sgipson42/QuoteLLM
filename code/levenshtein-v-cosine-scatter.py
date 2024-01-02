@@ -46,5 +46,5 @@ for filename in filenames:
     plt.title(f"Levenshtein vs. Optimal Cosine for {caps_title}")
     plt.scatter(x, y)  # Plot the chart
     plt.gca().invert_yaxis()
-    plt.savefig(f"/Users/skyler/Desktop/QuoteLLM/{genre}_levenshtein_v_cosine.png")
+    plt.savefig(f"/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/cosine_levenshtein_scatter_plots/{genre}_levenshtein_v_cosine.png")
     # plt.show()  # display

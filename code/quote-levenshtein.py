@@ -38,10 +38,10 @@ print(completions)
 # change csv variable, graph title and graph filename
 # change transcript file path to specific works directory
 # change repetitions if needed
-csv_path = "/Users/skyler/Desktop/QuoteLLM/"
+csv_path = "/Users/skyler/Desktop/QuoteLLM/results2.0/CSVs/"
 csv_file = csv_path + "no-names-spaces-directions-shakespeare-10-22-results.csv"
 graph_title = "Shakespeare No Stage Directions,Names, or Spaces"
-graph_path = "/Users/skyler/Desktop/QuoteLLM/"
+graph_path = "/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/levenshtein_histograms/" # levenshtein histograms
 graph_filename = graph_path + "no-names-spaces-directions-shakespeare-10-22-histogram.png"
 
 with open(csv_file, "w") as csvfile:

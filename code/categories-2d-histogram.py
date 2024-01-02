@@ -93,7 +93,7 @@ for name in filenames:
     cut_names.append(cut_name)
 plt.yticks(y_bins.tolist(), cut_names)
 # save and show results
-plt.savefig('/Users/skyler/Desktop/QuoteLLM/categories-2d-histogram.png')
+plt.savefig('/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/levenshtein_heatmaps/categories-2d-histogram.png')
 plt.show()
 
 

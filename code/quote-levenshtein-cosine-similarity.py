@@ -45,7 +45,7 @@ print(completions)
 csv_path = "/Users/skyler/Desktop/QuoteLLM/"
 csv_file = csv_path + "test-results.csv"
 graph_title = "Wikipedia #51-#100 Most Popular Pages"
-graph_path = "/Users/skyler/Desktop/QuoteLLM/"
+graph_path = "/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/levenshtein_histograms/"
 graph_filename = graph_path + "test-histogram.png"
 
 with open(csv_file, "w") as csvfile:
