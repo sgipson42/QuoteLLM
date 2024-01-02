@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-filepath = '/Users/skyler/Desktop/AI_Research/Results_2.0/CSVs/'
+filepath = '/Users/skyler/Desktop/QuoteLLM/Results_2.0/CSVs/'
 file_data = []
 
 # get mean levenshtein distance and filename from each file
@@ -93,7 +93,7 @@ for name in filenames:
     cut_names.append(cut_name)
 plt.yticks(y_bins.tolist(), cut_names)
 # save and show results
-plt.savefig('/Users/skyler/Desktop/AI_Research/Results_2.0/categories-2d-histogram.png')
+plt.savefig('/Users/skyler/Desktop/QuoteLLM/categories-2d-histogram.png')
 plt.show()
 
 
