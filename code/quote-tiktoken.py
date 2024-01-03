@@ -10,26 +10,18 @@ from Levenshtein import distance
 import csv
 import pandas as pd
 import matplotlib.pyplot as plt
-import spacy
+# import spacy
 import numpy as np
 import time
 from sentence_transformers import SentenceTransformer, util
-
 import tiktoken
-token_enc = tiktoken.get_encoding("cl100k_base")
-
-rand_token_ids = np.random.randint(0, token_enc.max_token_value+1, size=(1000,))
-rand_txt = token_enc.decode(rand_token_ids)
-print(rand_txt)
-tokens_for_text = token_enc.encode("foo bar baz")
-print(tokens_for_text)
-
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 embedding_model = SentenceTransformer('intfloat/e5-small-v2')
 model="gpt-3.5-turbo"
 # Load the English language model
-nlp = spacy.load("en_core_web_sm")
+# nlp = spacy.load("en_core_web_sm")
+token_enc = tiktoken.get_encoding("cl100k_base")
 """
 completions = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -72,13 +64,17 @@ with open(csv_file, "w") as csvfile:
         with open(transcript_file) as t:
             [title, transcript] = t.read().split("\n\n", 1)
             transcript_lines = transcript.split("\n")
-            doc = nlp(transcript)
+            # doc = nlp(transcript)
+            doc = token_enc.encode(transcript)
+            print(doc)
+
             repetitions = 200
             for repetition in range(repetitions):
                 try:
                     # Get a random token index
                     randtoken = random.randint(0, len(doc) - 21)
-                    token = doc[randtoken].text
+                    # token = doc[randtoken].text
+                    token = token_enc.decode(doc[randtoken])
                     # Get a random number for the substring length
                     randtoken_count = random.randint(20, 40)
 
@@ -92,7 +88,8 @@ with open(csv_file, "w") as csvfile:
 
                     gt_portion = random.randint(5, int(0.5 * len(gt_quote)))
                     begin_quote = gt_quote[:gt_portion]  # this is a string
-                    begin_quote_tokens = [token.text for token in begin_quote]
+                    # begin_quote_tokens = [token.text for token in begin_quote]
+                    begin_quote_tokens = [token_enc.decode(token) for token in begin_quote]
                     print('Begin quote:', begin_quote_tokens)
                     print()
 
@@ -104,7 +101,7 @@ with open(csv_file, "w") as csvfile:
                                     "to be,' the correct response would be 'that is the question: Whether 'tis nobler "
                                     "in the mind to suffer The slings and arrows of outrageous fortune,Or to take "
                                     "arms against a sea of troubles,And by opposing end them?'"},
-                        {"role": "assistant", "content": begin_quote.text}
+                        {"role": "assistant", "content": token_enc.decode(begin_quote)}
                     ]
                     completions = openai.ChatCompletion.create(
                         model=model,
@@ -117,12 +114,15 @@ with open(csv_file, "w") as csvfile:
 
                     pred = completions['choices'][0]['message']['content']
                     # get GPT prediction into tokenized form
-                    pred_doc = nlp(pred)
-                    pred_tokens = [token.text for token in pred_doc]
+                    # pred_doc = nlp(pred)
+                    pred_doc = token_enc.encode(pred)
+                    # pred_tokens = [token.text for token in pred_doc]
+                    pred_tokens = [token_enc.decode(token) for token in pred_doc]
                     print('pred_token:', pred_tokens)
 
                     trimmed_gt = gt_quote[gt_portion:] #end quote (answer)
-                    trimmed_tokens = [token.text for token in trimmed_gt]
+                    # trimmed_tokens = [token.text for token in trimmed_gt]
+                    trimmed_tokens = [token_enc.decode(token) for token in trimmed_gt]
 
                     # cut pred_tokens length to be comparable to trimmed_gt
                     # if pred_tokens length > trimmed_tokens length, cut it to length of trimmed, and all other positions (gt_quote, end token) stay the same
@@ -157,7 +157,7 @@ with open(csv_file, "w") as csvfile:
                     # Compute embedding for both lists
                     scores = []
                     for k in range(len(input_lengths)):
-                        embedding_1 = embedding_model.encode(trimmed_gt.text, convert_to_tensor = True)
+                        embedding_1 = embedding_model.encode(token_enc.decode(trimmed_gt), convert_to_tensor = True)
                         embedding_2 = embedding_model.encode(input_lengths[k], convert_to_tensor = True)
                         score = util.pytorch_cos_sim(embedding_1, embedding_2)
                         scores.append(score)
@@ -169,7 +169,7 @@ with open(csv_file, "w") as csvfile:
 
                     csvwriter.writerow(
                         [model, title, randtoken, randtoken_count, gt_quote, begin_quote_tokens,
-                         pred_tokens, trimmed_tokens, dist, pred, trimmed_gt.text, optimal_cosine, optimal_index, scores, start_token, end_token])
+                         pred_tokens, trimmed_tokens, dist, pred, token_enc.decode(trimmed_gt), optimal_cosine, optimal_index, scores, start_token, end_token])
 
                     print('Repetition:', repetition)
                     # increment repetitions if try works
@@ -186,6 +186,7 @@ with open(csv_file, "w") as csvfile:
                     else:
                         raise e
 
+"""
 # make histogram
 df = pd.read_csv(csv_file)
 df = df.sort_values('start_token')
@@ -199,7 +200,7 @@ plt.ylabel('Number of Indices')
 plt.title(graph_title)
 plt.savefig(graph_filename)
 plt.show()
-
+"""
 
 
 
