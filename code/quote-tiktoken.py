@@ -44,10 +44,10 @@ print(completions)
 # change csv variable, graph title and graph filename
 # change transcript file path to specific works directory
 # change repetitions if needed
-csv_path = "/Users/skyler/Desktop/QuoteLLM/"
+csv_path = "/Users/skyler/Desktop/QuoteLLM/results3.0/CSVs/"
 csv_file = csv_path + "test-results.csv"
 graph_title = "Wikipedia #51-#100 Most Popular Pages"
-graph_path = "/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/levenshtein_histograms/"
+graph_path = "/Users/skyler/Desktop/QuoteLLM/results3.0/visualization/levenshtein_histograms/"
 graph_filename = graph_path + "test-histogram.png"
 
 with open(csv_file, "w") as csvfile:
@@ -74,23 +74,23 @@ with open(csv_file, "w") as csvfile:
                     # Get a random token index
                     randtoken = random.randint(0, len(doc) - 21)
                     # token = doc[randtoken].text
-                    token = token_enc.decode(doc[randtoken])
+                    token = token_enc.decode([doc[randtoken]])
                     # Get a random number for the substring length
                     randtoken_count = random.randint(20, 40)
 
                     # Create a substring
                     start_token = randtoken-1
                     end_token = start_token + randtoken_count
-                    gt_quote = doc[start_token:end_token]  # this is a string
+                    gt_quote = doc[start_token:end_token]  # a list of tokens
                     if (len(gt_quote) < 10):
                         continue # skip this iteration because it gets funky
                     print('Gt quote:', gt_quote)
 
                     gt_portion = random.randint(5, int(0.5 * len(gt_quote)))
-                    begin_quote = gt_quote[:gt_portion]  # this is a string
+                    begin_quote = gt_quote[:gt_portion]  # a list of tokens
                     # begin_quote_tokens = [token.text for token in begin_quote]
-                    begin_quote_tokens = [token_enc.decode(token) for token in begin_quote]
-                    print('Begin quote:', begin_quote_tokens)
+                    begin_quote_decoded = [token_enc.decode([token]) for token in begin_quote]
+                    print('Begin quote:', begin_quote_decoded) # decoded
                     print()
 
                     messages = [
@@ -115,14 +115,14 @@ with open(csv_file, "w") as csvfile:
                     pred = completions['choices'][0]['message']['content']
                     # get GPT prediction into tokenized form
                     # pred_doc = nlp(pred)
-                    pred_doc = token_enc.encode(pred)
+                    pred_doc = token_enc.encode(pred) # encoded
                     # pred_tokens = [token.text for token in pred_doc]
-                    pred_tokens = [token_enc.decode(token) for token in pred_doc]
+                    pred_tokens = [token_enc.decode([token]) for token in pred_doc]
                     print('pred_token:', pred_tokens)
 
                     trimmed_gt = gt_quote[gt_portion:] #end quote (answer)
                     # trimmed_tokens = [token.text for token in trimmed_gt]
-                    trimmed_tokens = [token_enc.decode(token) for token in trimmed_gt]
+                    trimmed_tokens = [token_enc.decode([token]) for token in trimmed_gt]
 
                     # cut pred_tokens length to be comparable to trimmed_gt
                     # if pred_tokens length > trimmed_tokens length, cut it to length of trimmed, and all other positions (gt_quote, end token) stay the same
@@ -168,8 +168,8 @@ with open(csv_file, "w") as csvfile:
                     optimal_index = abs_scores.index(optimal_cosine) + 1
 
                     csvwriter.writerow(
-                        [model, title, randtoken, randtoken_count, gt_quote, begin_quote_tokens,
-                         pred_tokens, trimmed_tokens, dist, pred, token_enc.decode(trimmed_gt), optimal_cosine, optimal_index, scores, start_token, end_token])
+                        [model, title, randtoken, randtoken_count, token_enc.decode(gt_quote), begin_quote_decoded,
+                         pred_tokens, trimmed_tokens, dist, token_enc.decode(pred_doc), token_enc.decode(trimmed_gt), optimal_cosine, optimal_index, scores, start_token, end_token])
 
                     print('Repetition:', repetition)
                     # increment repetitions if try works
@@ -186,7 +186,7 @@ with open(csv_file, "w") as csvfile:
                     else:
                         raise e
 
-"""
+
 # make histogram
 df = pd.read_csv(csv_file)
 df = df.sort_values('start_token')
@@ -200,7 +200,7 @@ plt.ylabel('Number of Indices')
 plt.title(graph_title)
 plt.savefig(graph_filename)
 plt.show()
-"""
+
 
 
 
