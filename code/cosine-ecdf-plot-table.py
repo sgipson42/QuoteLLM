@@ -8,26 +8,28 @@ from statsmodels.distributions.empirical_distribution import ECDF
 # calculate area under each curve -- trapezoidal function?
 # sort the table by area
 # sort the legend
-from scipy.integrate import simpson
 
-# test code
-graph_filename = '/Users/skyler/Desktop/QuoteLLM/cosine-ecdf-plot.png'
+
+# for all lines different colors
+graph_filename = '/Users/skyler/Desktop/QuoteLLM/results3.0/visualization/cosine-ecdf-plot.png'
+# for some lines highlighted
+# graph_filename = '/Users/skyler/Desktop/QuoteLLM/results3.0/visualization/cosine-ecdf-plot-refined.png'
 # df = pd.read_csv('/Users/skyler/Desktop/QuoteLLM/results2.0/CSVs/bible-Versions-results.csv')
 
 graph_title = "Cosine Vector Comparison Scores"
 #graph_filename = '/Users/skyler/Desktop/QuoteLLM/results2.0/density_plots/cosine-density-plot.png'
-filenames = glob.glob('/Users/skyler/Desktop/QuoteLLM/results2.0/CSVs/*')
+filenames = glob.glob('/Users/skyler/Desktop/QuoteLLM/results3.0/CSVs/*') # get most recent files
 plt.figure(figsize=(20, 6))
 
 pos = 0
 palette_pos = 0
 palettes = [sns.color_palette("pastel"), sns.color_palette("deep"), sns.color_palette("husl", 3)]
-#palette = palettes[0]
-palette = sns.color_palette()
+palette = palettes[0] # for when having all lines different colors
+# palette = sns.color_palette() # for when highlighting a few lines in particular
 
 table_data = []
-trapz_table_data = []
-simpson_table_data = []
+# trapz_table_data = []
+# simpson_table_data = []
 for filename in filenames:
     df = pd.read_csv(filename)
     file = filename.split("/")[-1]
@@ -58,13 +60,15 @@ for filename in filenames:
 
     # print(scores)
     # plot the line with each line being a different color
-    """
+    # """
     if pos > 9:
         pos = 0
         palette = palettes[palette_pos+1]
     sns.ecdfplot(scores, label = caps_title, color = palette[pos])
-    """
+    # """
+
     # plot the line with specific colors for a few lines only
+    """
     if (caps_title == 'Quotes'):
         sns.ecdfplot(scores, label=caps_title, color=palette[1])
     elif (caps_title == 'Slogans'):
@@ -79,13 +83,17 @@ for filename in filenames:
         sns.ecdfplot(scores, label=caps_title, color=palette[6])
     else:
         sns.ecdfplot(scores, label=None, color=palette[0])
+    """
 
+    # alternate area under curve calculation method
+    """
     trapz_area = np.trapz(scores, dx = 0.01)
     print(trapz_area)
     simpson_area = simpson(scores, dx = 0.01)
     print(simpson_area)
     trapz_table_data.append([caps_title, trapz_area])
     simpson_table_data.append([caps_title, simpson_area])
+    """
     ecdf = ECDF(scores)
     ecdf_sum = np.sum(ecdf(np.arange(0.0, 1.0, 0.05)))
     table_data.append([caps_title, ecdf_sum])
@@ -114,7 +122,7 @@ table.set_fontsize(10)
 table.scale(1.5, 1.5)  # Adjust the scale of the table if needed
 plt.axis('off')
 plt.title('Table of Areas under Empirical CDF Curves')
-plt.savefig('/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/cosine_ecdfs/cosine-ecdf-table.png')
+plt.savefig('/Users/skyler/Desktop/QuoteLLM/results3.0/visualization/cosine-ecdf-table.png')
 plt.show()
 
 """
