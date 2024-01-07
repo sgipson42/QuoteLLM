@@ -14,6 +14,8 @@ import spacy
 import numpy as np
 import time
 
+#for results directory
+
 openai.api_key = os.environ["OPENAI_API_KEY"]
 # Load the English language model
 nlp = spacy.load("en_core_web_sm")

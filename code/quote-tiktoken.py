@@ -15,10 +15,12 @@ import numpy as np
 import time
 from sentence_transformers import SentenceTransformer, util
 import tiktoken
-
+# for results3.0 directory with model="gpt-3.5-turbo"
+# for results4.0 directory with
 openai.api_key = os.environ["OPENAI_API_KEY"]
 embedding_model = SentenceTransformer('intfloat/e5-small-v2')
-model="gpt-3.5-turbo"
+# model="gpt-3.5-turbo"
+model = ""
 # Load the English language model
 # nlp = spacy.load("en_core_web_sm")
 token_enc = tiktoken.get_encoding("cl100k_base")
@@ -44,10 +46,10 @@ print(completions)
 # change csv variable, graph title and graph filename
 # change transcript file path to specific works directory
 # change repetitions if needed
-csv_path = "/Users/skyler/Desktop/QuoteLLM/results3.0/CSVs/"
+csv_path = "/Users/skyler/Desktop/QuoteLLM/results4.0/CSVs/"
 csv_file = csv_path + "test-results.csv"
 graph_title = "Wikipedia #51-#100 Most Popular Pages"
-graph_path = "/Users/skyler/Desktop/QuoteLLM/results3.0/visualization/levenshtein_histograms/"
+graph_path = "/Users/skyler/Desktop/QuoteLLM/results4.0/visualization/levenshtein_histograms/"
 graph_filename = graph_path + "test-histogram.png"
 
 with open(csv_file, "w") as csvfile:

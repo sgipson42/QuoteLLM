@@ -14,6 +14,7 @@ import spacy
 import numpy as np
 import time
 from sentence_transformers import SentenceTransformer, util
+# for results2.0 directory
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 embedding_model = SentenceTransformer('intfloat/e5-small-v2')
