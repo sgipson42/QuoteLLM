@@ -18,7 +18,7 @@ from sentence_transformers import SentenceTransformer, util
 
 openai.api_key = os.environ["OPENAI_API_KEY"]
 embedding_model = SentenceTransformer('intfloat/e5-small-v2')
-model="gpt-3.5-turbo"
+model = "gpt-3.5-turbo"
 # Load the English language model
 nlp = spacy.load("en_core_web_sm")
 """
@@ -55,7 +55,6 @@ with open(csv_file, "w") as csvfile:
         ["model", "file", "randtoken", "randtoken_count", "gt", "gt_portion", "pred", "answer", "levenshtein_distance", "full_pred", "full_answer", "optimal_cosine", "optimal_index", "cosine_scores",
          "start_token", "end_token"])
 
-    model = "gpt-3.5-turbo"
     for transcript_file in glob.glob("/Users/skyler/oldLLM/transcripts/wikipedia/*"):
         print(transcript_file)
         token_count = 0

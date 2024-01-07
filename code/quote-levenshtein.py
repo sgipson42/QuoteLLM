@@ -14,11 +14,11 @@ import spacy
 import numpy as np
 import time
 
-#for results directory
-
+# for results directory
 openai.api_key = os.environ["OPENAI_API_KEY"]
 # Load the English language model
 nlp = spacy.load("en_core_web_sm")
+model = "gpt-3.5-turbo"
 
 completions = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -52,7 +52,6 @@ with open(csv_file, "w") as csvfile:
         ["model", "file", "randtoken", "randtoken_count", "gt", "gt_portion", "pred", "answer", "levenshtein_distance",
          "start_token", "end_token"])
 
-    model = "gpt-3.5-turbo"
     for transcript_file in glob.glob("/Users/skyler/oldLLM/transcripts/no-names-spaces-directions-shakespeare/*"):
         print(transcript_file)
         token_count = 0

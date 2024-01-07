@@ -16,13 +16,11 @@ import time
 from sentence_transformers import SentenceTransformer, util
 import tiktoken
 # for results3.0 directory with model="gpt-3.5-turbo"
-# for results4.0 directory with
+# for results4.0 directory with model = "gpt-4-1106-preview"
 openai.api_key = os.environ["OPENAI_API_KEY"]
 embedding_model = SentenceTransformer('intfloat/e5-small-v2')
-# model="gpt-3.5-turbo"
-model = ""
-# Load the English language model
-# nlp = spacy.load("en_core_web_sm")
+# model = "gpt-3.5-turbo"
+model = "gpt-4-1106-preview"
 token_enc = tiktoken.get_encoding("cl100k_base")
 """
 completions = openai.ChatCompletion.create(
@@ -47,10 +45,10 @@ print(completions)
 # change transcript file path to specific works directory
 # change repetitions if needed
 csv_path = "/Users/skyler/Desktop/QuoteLLM/results4.0/CSVs/"
-csv_file = csv_path + "test-results.csv"
-graph_title = "Wikipedia #51-#100 Most Popular Pages"
+csv_file = csv_path + "constitution-results.csv"
+graph_title = "Constitution"
 graph_path = "/Users/skyler/Desktop/QuoteLLM/results4.0/visualization/levenshtein_histograms/"
-graph_filename = graph_path + "test-histogram.png"
+graph_filename = graph_path + "constitution-histogram.png"
 
 with open(csv_file, "w") as csvfile:
     csvwriter = csv.writer(csvfile)
@@ -58,8 +56,7 @@ with open(csv_file, "w") as csvfile:
         ["model", "file", "randtoken", "randtoken_count", "gt", "gt_portion", "pred", "answer", "levenshtein_distance", "full_pred", "full_answer", "optimal_cosine", "optimal_index", "cosine_scores",
          "start_token", "end_token"])
 
-    model = "gpt-3.5-turbo"
-    for transcript_file in glob.glob("/Users/skyler/oldLLM/transcripts/wikipedia/*"):
+    for transcript_file in glob.glob("/Users/skyler/oldLLM/transcripts/constitution/*"):
         print(transcript_file)
         token_count = 0
         time.sleep(30)
