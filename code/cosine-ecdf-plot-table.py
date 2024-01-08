@@ -11,19 +11,19 @@ from statsmodels.distributions.empirical_distribution import ECDF
 
 
 # for all lines different colors
-graph_filename = '/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/cosine-ecdf-plot.png'
+graph_filename = '/Users/skyler/Desktop/QuoteLLM/results4.0/visualization/cosine-ecdf-plot.png'
 # for some lines highlighted
 # graph_filename = '/Users/skyler/Desktop/QuoteLLM/results3.0/visualization/cosine-ecdf-plot-refined.png'
 # df = pd.read_csv('/Users/skyler/Desktop/QuoteLLM/results2.0/CSVs/bible-Versions-results.csv')
 
 graph_title = "Cosine Vector Comparison Scores"
 #graph_filename = '/Users/skyler/Desktop/QuoteLLM/results2.0/density_plots/cosine-density-plot.png'
-filenames = glob.glob('/Users/skyler/Desktop/QuoteLLM/results2.0/CSVs/*') # get most recent files
+filenames = glob.glob('/Users/skyler/Desktop/QuoteLLM/results4.0/CSVs/*') # get most recent files
 plt.figure(figsize=(20, 6))
 
 pos = 0
 palette_pos = 0
-palettes = [sns.color_palette("pastel"), sns.color_palette("deep"), sns.color_palette("husl", 3)]
+palettes = [sns.color_palette("deep"), sns.color_palette("pastel"), sns.color_palette("husl", 3)]
 palette = palettes[0] # for when having all lines different colors
 # palette = sns.color_palette() # for when highlighting a few lines in particular
 
@@ -67,6 +67,7 @@ for filename in filenames:
         palette = palettes[palette_pos+1]
     sns.ecdfplot(scores, label = caps_title, color = palette[pos])
     color = palette[pos]
+    pos+=1
 
     # plot the line with specific colors for a few lines only
     """
@@ -130,7 +131,7 @@ table.set_fontsize(10)
 table.scale(1.5, 1.5)  # Adjust the scale of the table if needed
 plt.axis('off')
 plt.title('Table of Areas under Empirical CDF Curves')
-plt.savefig('/Users/skyler/Desktop/QuoteLLM/results2.0/visualization/cosine-ecdf-table.png')
+plt.savefig('/Users/skyler/Desktop/QuoteLLM/results4.0/visualization/cosine-ecdf-table.png')
 plt.show()
 
 """
